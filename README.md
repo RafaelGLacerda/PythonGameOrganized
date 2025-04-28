@@ -37,6 +37,7 @@ If you want to explore or modify the source code:
 
 1. Make sure you have Python installed.
 2. Install Pygame by running:
+3. Run Main.py
 
 ```bash
 pip install pygame
