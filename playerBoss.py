@@ -67,6 +67,8 @@ class Player:
         self.attack_speed = attrs["Vel. Ataque"]
         self.dodging = False
         self.dodge_timer = 0
+        self.last_dodge = 0
+        self.dodge_cooldown = 1000
         
         self.image = pygame.transform.scale(player_idle, (PLAYER_SIZE, PLAYER_SIZE))
         self.rect = self.image.get_rect(center=(WIDTH // 2, HEIGHT // 2))
@@ -89,16 +91,19 @@ class Player:
             self.rect.y += dy * self.speed
 
         self.rect.clamp_ip(pygame.Rect(0, 0, WIDTH, HEIGHT))
-
+        
     def dodge(self):
-        self.dodging = True
-        self.dodge_timer = pygame.time.get_ticks()
-        self.image = player_roll
+        now = pygame.time.get_ticks()
+        if now - self.last_dodge >= self.dodge_cooldown:  # só pode rolar se cooldown acabou
+            self.dodging = True
+            self.dodge_timer = now
+            self.last_dodge = now
+            self.image = player_roll
 
     def update(self):
         if self.dodging and pygame.time.get_ticks() - self.dodge_timer > 300:
             self.dodging = False
-            self.image = player_idle
+            self.image = pygame.transform.scale(player_idle, (PLAYER_SIZE, PLAYER_SIZE))
 
     def draw(self, win):
         win.blit(self.image, self.rect.topleft)
